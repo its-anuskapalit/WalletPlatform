@@ -109,9 +109,7 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-// ── Health Checks ─────────────────────────────────────────────────────────
-builder.Services.AddHealthChecks()
-    .AddDbContextCheck<RewardsDbContext>();
+
 
 var app = builder.Build();
 
@@ -129,7 +127,7 @@ app.UseSerilogRequestLogging();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-app.MapHealthChecks("/health");
+
 
 // ── Auto-migrate and seed ─────────────────────────────────────────────────
 if (app.Environment.IsDevelopment())

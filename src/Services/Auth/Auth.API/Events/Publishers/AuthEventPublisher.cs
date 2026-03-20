@@ -6,12 +6,12 @@ namespace Auth.API.Events.Publishers;
 
 public class AuthEventPublisher
 {
-    //private readonly IRabbitMQPublisher _publisher;
+    private readonly IRabbitMQPublisher _publisher;
     private readonly ILogger<AuthEventPublisher> _logger;
 
-    public AuthEventPublisher(/*IRabbitMQPublisher publisher,*/ ILogger<AuthEventPublisher> logger)
+    public AuthEventPublisher(IRabbitMQPublisher publisher, ILogger<AuthEventPublisher> logger)
     {
-        //_publisher = publisher;
+        _publisher = publisher;
         _logger = logger;
     }
 
@@ -19,7 +19,7 @@ public class AuthEventPublisher
     {
         try
         {
-            //_publisher.Publish(@event, RabbitMQQueues.UserRegistered);
+            _publisher.Publish(@event, RabbitMQQueues.UserRegistered);
             _logger.LogInformation("Published UserRegisteredEvent for {UserId}", @event.UserId);
         }
         catch (Exception ex)
@@ -32,7 +32,7 @@ public class AuthEventPublisher
     {
         try
         {
-            //_publisher.Publish(@event, RabbitMQQueues.KYCApproved);
+            _publisher.Publish(@event, RabbitMQQueues.KYCApproved);
             _logger.LogInformation("Published KYCApprovedEvent for {UserId}", @event.UserId);
         }
         catch (Exception ex)

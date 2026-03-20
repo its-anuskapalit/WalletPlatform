@@ -106,9 +106,7 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-// ── Health Checks ─────────────────────────────────────────────────────────
-builder.Services.AddHealthChecks()
-    .AddDbContextCheck<WalletDbContext>();
+
 
 var app = builder.Build();
 
@@ -126,7 +124,6 @@ app.UseSerilogRequestLogging();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-app.MapHealthChecks("/health");
 
 // ── Auto-migrate on startup ───────────────────────────────────────────────
 if (app.Environment.IsDevelopment())

@@ -8,7 +8,6 @@ using Auth.API.Services.Implementations;
 using Auth.API.Services.Interfaces;
 using Auth.API.Validators;
 using FluentValidation;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -46,13 +45,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey         = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
-            ValidateIssuer           = true,
-            ValidIssuer              = builder.Configuration["Jwt:Issuer"],
-            ValidateAudience         = true,
-            ValidAudience            = builder.Configuration["Jwt:Audience"],
-            ValidateLifetime         = true,
-            ClockSkew                = TimeSpan.Zero
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
+            ValidateIssuer = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidateAudience = true,
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.Zero
         };
     });
 
@@ -83,17 +82,17 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title   = "WalletPlatform - Auth API",
+        Title = "WalletPlatform - Auth API",
         Version = "v1"
     });
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        Name         = "Authorization",
-        Type         = SecuritySchemeType.Http,
-        Scheme       = "Bearer",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer",
         BearerFormat = "JWT",
-        In           = ParameterLocation.Header,
-        Description  = "Enter your JWT token"
+        In = ParameterLocation.Header,
+        Description = "Enter your JWT token"
     });
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
@@ -111,7 +110,7 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-// // ── Health Checks ─────────────────────────────────────────────────────────
+// ── Health Checks ─────────────────────────────────────────────────────────
 builder.Services.AddHealthChecks()
     .AddDbContextCheck<AuthDbContext>();
 
@@ -137,7 +136,7 @@ if (app.Environment.IsDevelopment())
 {
     using var scope = app.Services.CreateScope();
     var db = scope.ServiceProvider.GetRequiredService<AuthDbContext>();
-    //await db.Database.MigrateAsync();
+    await db.Database.MigrateAsync();
 }
 
 await app.RunAsync();
