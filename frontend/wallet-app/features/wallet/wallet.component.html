@@ -1,0 +1,45 @@
+<div class="wallet-page">
+  <div class="page-header">
+    <h1>My Wallet</h1>
+    <p>Manage your wallet balance</p>
+  </div>
+
+  <div class="loading-state" *ngIf="loading">
+    <div class="spinner"></div>
+  </div>
+
+  <ng-container *ngIf="!loading && wallet">
+    <div class="stats-grid">
+      <div class="stat-card balance-card">
+        <div class="stat-label">Available Balance</div>
+        <div class="stat-value">
+          <span class="currency">₹</span>{{ wallet!.availableBalance | number:'1.2-2' }}
+        </div>
+        <div class="stat-meta">
+          {{ wallet!.walletNumber }} ·
+          <span [class]="'badge ' + (wallet!.status === 'Active' ? 'badge-success' : 'badge-warning')">
+            {{ wallet!.status }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card fund-card">
+      <h2>Add Money</h2>
+      <p>Top up your wallet balance</p>
+      <div class="fund-row">
+        <div class="form-group" style="flex:1; margin:0">
+          <input
+            type="number"
+            [(ngModel)]="amount"
+            placeholder="Enter amount in ₹"
+            min="1"/>
+        </div>
+        <button class="btn btn-primary" (click)="fund()" [disabled]="funding || amount <= 0">
+          <span *ngIf="!funding">Add Money</span>
+          <span *ngIf="funding"  class="spinner"></span>
+        </button>
+      </div>
+    </div>
+  </ng-container>
+</div>

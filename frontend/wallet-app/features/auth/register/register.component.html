@@ -1,0 +1,100 @@
+<div class="auth-page">
+  <div class="auth-card">
+
+    <div class="auth-header">
+      <div class="auth-logo">◈</div>
+      <h1>Create account</h1>
+      <p>Join WalletPay — it takes 30 seconds</p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>First name</label>
+          <input type="text" formControlName="firstName" placeholder="Rahul"/>
+          <span class="form-error" *ngIf="f['firstName'].touched && f['firstName'].invalid">
+            Required.
+          </span>
+        </div>
+        <div class="form-group">
+          <label>Last name</label>
+          <input type="text" formControlName="lastName" placeholder="Sharma"/>
+          <span class="form-error" *ngIf="f['lastName'].touched && f['lastName'].invalid">
+            Required.
+          </span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Email address</label>
+        <input type="email" formControlName="email" placeholder="rahul@example.com"/>
+        <span class="form-error" *ngIf="f['email'].touched && f['email'].invalid">
+          Valid email is required.
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label>Phone number</label>
+        <input type="tel" formControlName="phoneNumber" placeholder="+919876543210"/>
+        <span class="form-error" *ngIf="f['phoneNumber'].touched && f['phoneNumber'].invalid">
+          Enter a valid phone number with country code.
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label>Password</label>
+        <div class="input-with-toggle">
+          <input
+            [type]="showPass ? 'text' : 'password'"
+            formControlName="password"
+            placeholder="Min 8 chars, 1 uppercase, 1 number, 1 special"/>
+          <button type="button" class="toggle-pass" (click)="showPass = !showPass">
+            {{ showPass ? '🙈' : '👁' }}
+          </button>
+        </div>
+        <span class="form-error" *ngIf="f['password'].touched && f['password'].invalid">
+          Min 8 characters with uppercase, number, and special character.
+        </span>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-full" [disabled]="loading">
+        <span *ngIf="!loading">Create account</span>
+        <span *ngIf="loading" class="spinner"></span>
+      </button>
+
+    </form>
+
+    <p class="auth-footer">
+      Already have an account?
+      <a routerLink="/auth/login">Sign in</a>
+    </p>
+
+  </div>
+
+  <div class="auth-visual">
+    <div class="steps">
+      <div class="step done">
+        <div class="step-num">1</div>
+        <div class="step-info">
+          <strong>Create account</strong>
+          <span>30 seconds</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-info">
+          <strong>Submit KYC</strong>
+          <span>Upload your document</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-info">
+          <strong>Activate wallet</strong>
+          <span>Start transacting</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

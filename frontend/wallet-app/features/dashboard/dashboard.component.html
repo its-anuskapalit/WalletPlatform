@@ -1,0 +1,122 @@
+<div class="dashboard">
+
+  <!-- Loading -->
+  <div class="loading-state" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Loading your dashboard...</p>
+  </div>
+
+  <ng-container *ngIf="!loading">
+
+    <!-- Page header -->
+    <div class="page-header">
+      <h1>Dashboard</h1>
+      <span class="page-subtitle">
+        {{ authService.currentUser?.fullName }}'s financial overview
+      </span>
+    </div>
+
+    <!-- Stats row -->
+    <div class="stats-grid">
+
+      <!-- Balance card -->
+      <div class="stat-card balance-card">
+        <div class="stat-label">Available Balance</div>
+        <div class="stat-value">
+          <span class="currency">₹</span>
+          {{ wallet?.availableBalance | number:'1.2-2' }}
+        </div>
+        <div class="stat-meta">
+          Wallet {{ wallet?.walletNumber }} ·
+          <span [class]="'badge ' + (wallet?.status === 'Active' ? 'badge-success' : 'badge-warning')">
+            {{ wallet?.status }}
+          </span>
+        </div>
+        <div class="card-actions">
+          <a routerLink="/send-money" class="btn btn-primary">↗ Send</a>
+          <a routerLink="/wallet"     class="btn btn-ghost">+ Add Money</a>
+        </div>
+      </div>
+
+      <!-- Points card -->
+      <div class="stat-card points-card" *ngIf="loyalty">
+        <div class="tier-badge" [style.background]="loyalty.tierBadgeColor + '22'"
+             [style.color]="loyalty.tierBadgeColor">
+          {{ loyalty.tierName }}
+        </div>
+        <div class="stat-label">Reward Points</div>
+        <div class="stat-value points-value">
+          {{ loyalty.totalPoints | number }}
+        </div>
+        <div class="tier-progress-wrap">
+          <div class="tier-labels">
+            <span>{{ loyalty.lifetimePoints }} pts lifetime</span>
+            <span>{{ loyalty.pointsToNextTier }} to {{ loyalty.nextTierName }}</span>
+          </div>
+          <div class="tier-progress">
+            <div class="tier-fill" [style.width.%]="getTierProgress()"></div>
+          </div>
+        </div>
+        <a routerLink="/rewards" class="btn btn-ghost rewards-btn">View rewards →</a>
+      </div>
+
+      <!-- KYC card -->
+      <div class="stat-card kyc-card">
+        <div class="stat-label">KYC Status</div>
+        <div class="kyc-status-icon"
+          [class.approved]="authService.currentUser?.kycStatus === 'Approved'"
+          [class.pending]="authService.currentUser?.kycStatus !== 'Approved'">
+          {{ authService.currentUser?.kycStatus === 'Approved' ? '✓' : '!' }}
+        </div>
+        <div class="stat-value kyc-text">
+          {{ authService.currentUser?.kycStatus }}
+        </div>
+        <p class="kyc-hint" *ngIf="authService.currentUser?.kycStatus !== 'Approved'">
+          Submit your KYC documents to unlock full wallet features.
+        </p>
+        <p class="kyc-hint kyc-hint--success"
+           *ngIf="authService.currentUser?.kycStatus === 'Approved'">
+          Your identity has been verified. All features unlocked.
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Recent transactions -->
+    <div class="section-header">
+      <h2>Recent Transactions</h2>
+      <a routerLink="/transactions" class="view-all">View all →</a>
+    </div>
+
+    <div class="card" *ngIf="transactions.length === 0">
+      <div class="empty-state">
+        <span class="empty-icon">⇄</span>
+        <p>No transactions yet. Send your first payment!</p>
+        <a routerLink="/send-money" class="btn btn-primary">Send Money</a>
+      </div>
+    </div>
+
+    <div class="transaction-list" *ngIf="transactions.length > 0">
+      <div class="txn-row" *ngFor="let txn of transactions">
+        <div class="txn-icon" [class.debit]="txn.senderId === authService.currentUser?.id"
+                               [class.credit]="txn.recipientId === authService.currentUser?.id">
+          {{ txn.senderId === authService.currentUser?.id ? '↑' : '↓' }}
+        </div>
+        <div class="txn-info">
+          <span class="txn-desc">{{ txn.description || txn.type }}</span>
+          <span class="txn-date">{{ txn.createdAt | date:'dd MMM, hh:mm a' }}</span>
+        </div>
+        <div class="txn-right">
+          <span class="txn-amount"
+            [class.amount-debit]="txn.senderId === authService.currentUser?.id"
+            [class.amount-credit]="txn.recipientId === authService.currentUser?.id">
+            {{ txn.senderId === authService.currentUser?.id ? '-' : '+' }}
+            ₹{{ txn.amount | number:'1.2-2' }}
+          </span>
+          <span [class]="'badge ' + getStatusClass(txn.status)">{{ txn.status }}</span>
+        </div>
+      </div>
+    </div>
+
+  </ng-container>
+</div>

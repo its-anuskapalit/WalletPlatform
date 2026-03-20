@@ -1,0 +1,74 @@
+<div class="send-money-page">
+
+  <div class="page-header">
+    <h1>Send Money</h1>
+    <p>Transfer funds to another WalletPay user instantly</p>
+  </div>
+
+  <!-- Success state -->
+  <div class="success-card card" *ngIf="success">
+    <div class="success-icon">✓</div>
+    <h2>Payment Sent!</h2>
+    <p class="success-amount">₹{{ success.amount | number:'1.2-2' }}</p>
+    <p class="success-id">Transaction ID: {{ success.id }}</p>
+    <div class="success-actions">
+      <button class="btn btn-ghost" (click)="success = null">Send another</button>
+      <a routerLink="/transactions" class="btn btn-primary">View history</a>
+    </div>
+  </div>
+
+  <!-- Form -->
+  <div class="form-card card" *ngIf="!success">
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+
+      <div class="form-group">
+        <label>Recipient User ID</label>
+        <input
+          type="text"
+          formControlName="recipientId"
+          placeholder="Paste recipient's User ID (UUID)"/>
+        <span class="form-error" *ngIf="f['recipientId'].touched && f['recipientId'].invalid">
+          Recipient ID is required.
+        </span>
+        <span class="form-hint">
+          You can find a user's ID in their profile or via Admin panel.
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label>Amount (₹)</label>
+        <input
+          type="number"
+          formControlName="amount"
+          placeholder="0.00"
+          min="1"
+          step="0.01"/>
+        <span class="form-error" *ngIf="f['amount'].touched && f['amount'].invalid">
+          Enter an amount greater than ₹1.
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label>Description</label>
+        <input
+          type="text"
+          formControlName="description"
+          placeholder="e.g. Dinner split, Rent, etc."/>
+        <span class="form-error" *ngIf="f['description'].touched && f['description'].invalid">
+          Description is required.
+        </span>
+      </div>
+
+      <div class="send-info">
+        <span>🔒 Secured with idempotency — duplicate requests are safe</span>
+      </div>
+
+      <button type="submit" class="btn btn-primary send-btn" [disabled]="loading">
+        <span *ngIf="!loading">Send ₹{{ form.value.amount || 0 | number:'1.2-2' }}</span>
+        <span *ngIf="loading" class="spinner"></span>
+      </button>
+
+    </form>
+  </div>
+</div>

@@ -1,0 +1,45 @@
+@use '../login/login.component.scss';
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.steps {
+  display:        flex;
+  flex-direction: column;
+  gap:            24px;
+}
+
+.step {
+  display:     flex;
+  align-items: center;
+  gap:         16px;
+  opacity:     0.5;
+  transition:  opacity 0.3s;
+
+  &.done { opacity: 1; }
+
+  .step-num {
+    width:           40px;
+    height:          40px;
+    border-radius:   50%;
+    background:      var(--primary);
+    display:         flex;
+    align-items:     center;
+    justify-content: center;
+    font-weight:     700;
+    font-size:       16px;
+    flex-shrink:     0;
+  }
+
+  .step-info {
+    display:        flex;
+    flex-direction: column;
+    gap:            2px;
+
+    strong { font-size: 15px; }
+    span   { font-size: 13px; color: var(--text-muted); }
+  }
+}

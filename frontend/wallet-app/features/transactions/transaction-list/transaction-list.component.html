@@ -1,0 +1,58 @@
+<div class="txn-page">
+
+  <div class="page-header">
+    <h1>Transactions</h1>
+    <p>Your complete payment history</p>
+  </div>
+
+  <div class="loading-state" *ngIf="loading">
+    <div class="spinner"></div>
+  </div>
+
+  <div class="card empty-state" *ngIf="!loading && transactions.length === 0">
+    <span class="empty-icon">⇄</span>
+    <p>No transactions found. Make your first payment!</p>
+    <a routerLink="/send-money" class="btn btn-primary">Send Money</a>
+  </div>
+
+  <div class="txn-table card" *ngIf="!loading && transactions.length > 0">
+    <div class="table-header">
+      <span>Type</span>
+      <span>Description</span>
+      <span>Amount</span>
+      <span>Status</span>
+      <span>Date</span>
+    </div>
+
+    <div class="table-row" *ngFor="let txn of transactions">
+      <div class="txn-type-cell">
+        <div class="txn-icon-sm"
+          [class.debit]="isDebit(txn)"
+          [class.credit]="!isDebit(txn)">
+          {{ isDebit(txn) ? '↑' : '↓' }}
+        </div>
+        <span>{{ isDebit(txn) ? 'Sent' : 'Received' }}</span>
+      </div>
+
+      <div class="txn-desc-cell">
+        <span class="desc-text">{{ txn.description || txn.type }}</span>
+        <span class="txn-id">{{ txn.id | slice:0:8 }}...</span>
+      </div>
+
+      <div class="txn-amount-cell"
+        [class.amount-debit]="isDebit(txn)"
+        [class.amount-credit]="!isDebit(txn)">
+        {{ isDebit(txn) ? '-' : '+' }}₹{{ txn.amount | number:'1.2-2' }}
+      </div>
+
+      <div>
+        <span [class]="'badge ' + getStatusClass(txn.status)">{{ txn.status }}</span>
+      </div>
+
+      <div class="date-cell">
+        {{ txn.createdAt | date:'dd MMM yy, h:mm a' }}
+      </div>
+    </div>
+  </div>
+
+</div>

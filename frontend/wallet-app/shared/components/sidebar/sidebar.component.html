@@ -1,0 +1,30 @@
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <span class="logo-icon">◈</span>
+    <span class="logo-text">WalletPay</span>
+  </div>
+
+  <nav class="sidebar-nav">
+    
+      *ngFor="let item of navItems"
+      [routerLink]="item.route"
+      routerLinkActive="active"
+      class="nav-item">
+      <span class="nav-icon">{{ item.icon }}</span>
+      <span class="nav-label">{{ item.label }}</span>
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="user-info">
+      <div class="user-avatar">
+        {{ authService.currentUser?.fullName?.charAt(0) | uppercase }}
+      </div>
+      <div class="user-details">
+        <span class="user-name">{{ authService.currentUser?.fullName }}</span>
+        <span class="user-role">{{ authService.currentUser?.role }}</span>
+      </div>
+    </div>
+    <button class="btn-logout" (click)="logout()">⏻</button>
+  </div>
+</aside>

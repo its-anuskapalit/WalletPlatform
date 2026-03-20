@@ -1,0 +1,13 @@
+<div class="app-shell" *ngIf="authService.isLoggedIn; else authLayout">
+  <app-sidebar></app-sidebar>
+  <div class="main-content">
+    <app-navbar></app-navbar>
+    <div class="page-content">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>
+
+<ng-template #authLayout>
+  <router-outlet></router-outlet>
+</ng-template>

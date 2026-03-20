@@ -1,0 +1,116 @@
+<div class="rewards-page">
+
+  <div class="page-header">
+    <h1>Rewards</h1>
+    <p>Earn points on every transaction, redeem for great rewards</p>
+  </div>
+
+  <div class="loading-state" *ngIf="loading">
+    <div class="spinner"></div>
+  </div>
+
+  <ng-container *ngIf="!loading && loyalty">
+
+    <!-- Tier card -->
+    <div class="tier-hero card">
+      <div class="tier-info">
+        <div class="tier-name"
+          [style.color]="loyalty!.tierBadgeColor">
+          {{ loyalty!.tierName }} Member
+        </div>
+        <div class="points-display">
+          <span class="points-big">{{ loyalty!.totalPoints | number }}</span>
+          <span class="points-label">available points</span>
+        </div>
+        <div class="lifetime-line">
+          {{ loyalty!.lifetimePoints | number }} lifetime points ·
+          {{ loyalty!.redeemedPoints | number }} redeemed
+        </div>
+      </div>
+
+      <div class="tier-progress-section">
+        <div class="progress-labels">
+          <span>{{ loyalty!.tierName }}</span>
+          <span>{{ loyalty!.nextTierName }}</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill"
+            [style.width.%]="getTierProgress()"
+            [style.background]="loyalty!.tierBadgeColor">
+          </div>
+        </div>
+        <p class="progress-hint">
+          {{ loyalty!.pointsToNextTier | number }} more points to reach {{ loyalty!.nextTierName }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Catalog -->
+    <div class="section-header">
+      <h2>Redeem Points</h2>
+      <span class="points-available">{{ loyalty!.totalPoints | number }} pts available</span>
+    </div>
+
+    <div class="catalog-grid">
+      <div
+        class="catalog-item card"
+        *ngFor="let item of catalog"
+        [class.locked]="!canRedeem(item)">
+
+        <div class="item-category badge badge-info">{{ item.category }}</div>
+
+        <div class="item-brand" *ngIf="item.brand">{{ item.brand }}</div>
+        <h3 class="item-name">{{ item.name }}</h3>
+        <p class="item-desc">{{ item.description }}</p>
+
+        <div class="item-footer">
+          <div class="item-cost">
+            <span class="cost-value">{{ item.pointsCost | number }}</span>
+            <span class="cost-label">points</span>
+          </div>
+
+          <button
+            class="btn"
+            [class.btn-primary]="canRedeem(item)"
+            [class.btn-ghost]="!canRedeem(item)"
+            [disabled]="!canRedeem(item) || redeeming === item.id"
+            (click)="redeem(item)">
+            <span *ngIf="redeeming !== item.id">
+              {{ canRedeem(item) ? 'Redeem' : 'Need ' + (item.pointsCost - loyalty!.totalPoints) + ' more' }}
+            </span>
+            <span *ngIf="redeeming === item.id" class="spinner"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Points history -->
+    <div class="section-header" style="margin-top: 40px">
+      <h2>Points History</h2>
+    </div>
+
+    <div class="card history-card">
+      <div class="history-empty" *ngIf="history.length === 0">
+        <p>No points activity yet. Make a transaction to earn points!</p>
+      </div>
+
+      <div class="history-row" *ngFor="let entry of history">
+        <div class="history-icon"
+          [class.earned]="entry.type === 'Earned'"
+          [class.redeemed]="entry.type === 'Redeemed'">
+          {{ entry.type === 'Earned' ? '+' : '-' }}
+        </div>
+        <div class="history-info">
+          <span class="history-desc">{{ entry.description }}</span>
+          <span class="history-date">{{ entry.createdAt | date:'dd MMM yy, h:mm a' }}</span>
+        </div>
+        <div class="history-points"
+          [class.earned]="entry.type === 'Earned'"
+          [class.redeemed]="entry.type === 'Redeemed'">
+          {{ entry.points > 0 ? '+' : '' }}{{ entry.points | number }} pts
+        </div>
+      </div>
+    </div>
+
+  </ng-container>
+</div>

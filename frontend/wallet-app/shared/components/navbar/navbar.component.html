@@ -1,0 +1,15 @@
+<header class="navbar">
+  <div class="navbar-left">
+    <span class="kyc-badge"
+      [class.kyc-pending]="authService.currentUser?.kycStatus !== 'Approved'"
+      [class.kyc-approved]="authService.currentUser?.kycStatus === 'Approved'">
+      KYC: {{ authService.currentUser?.kycStatus }}
+    </span>
+  </div>
+
+  <div class="navbar-right">
+    <span class="greeting">
+      Hello, {{ authService.currentUser?.fullName?.split(' ')[0] }} 👋
+    </span>
+  </div>
+</header>

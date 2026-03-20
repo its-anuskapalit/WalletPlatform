@@ -1,0 +1,232 @@
+.rewards-page { animation: fadeIn 0.3s ease; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.page-header {
+  margin-bottom: 32px;
+  h1 { font-size: 28px; margin-bottom: 6px; }
+  p  { color: var(--text-muted); font-size: 14px; }
+}
+
+.loading-state {
+  display:         flex;
+  justify-content: center;
+  padding:         60px;
+}
+
+// ── Tier hero ─────────────────────────────────────────────
+.tier-hero {
+  display:       grid;
+  grid-template-columns: 1fr 1fr;
+  gap:           40px;
+  align-items:   center;
+  margin-bottom: 40px;
+  padding:       36px;
+  background:    linear-gradient(135deg, var(--bg-card) 0%, rgba(108,99,255,0.06) 100%);
+}
+
+.tier-name {
+  font-family:   var(--font-display);
+  font-size:     14px;
+  font-weight:   700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 12px;
+}
+
+.points-display {
+  display:     flex;
+  align-items: baseline;
+  gap:         8px;
+  margin-bottom: 8px;
+
+  .points-big {
+    font-family: var(--font-display);
+    font-size:   52px;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .points-label {
+    font-size: 14px;
+    color:     var(--text-muted);
+  }
+}
+
+.lifetime-line {
+  font-size: 12px;
+  color:     var(--text-muted);
+}
+
+.tier-progress-section {
+  .progress-labels {
+    display:         flex;
+    justify-content: space-between;
+    font-size:       12px;
+    color:           var(--text-muted);
+    margin-bottom:   8px;
+  }
+}
+
+.progress-bar {
+  height:        8px;
+  background:    var(--border);
+  border-radius: 4px;
+  overflow:      hidden;
+  margin-bottom: 8px;
+
+  .progress-fill {
+    height:        100%;
+    border-radius: 4px;
+    transition:    width 0.8s ease;
+  }
+}
+
+.progress-hint {
+  font-size: 12px;
+  color:     var(--text-muted);
+}
+
+// ── Section header ────────────────────────────────────────
+.section-header {
+  display:         flex;
+  justify-content: space-between;
+  align-items:     center;
+  margin-bottom:   20px;
+
+  h2 { font-size: 20px; }
+
+  .points-available {
+    font-size:   13px;
+    color:       var(--accent);
+    font-weight: 600;
+  }
+}
+
+// ── Catalog grid ──────────────────────────────────────────
+.catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap:     20px;
+  margin-bottom: 16px;
+}
+
+.catalog-item {
+  display:        flex;
+  flex-direction: column;
+  gap:            8px;
+  padding:        24px;
+  transition:     transform 0.2s, border-color 0.2s;
+
+  &:hover:not(.locked) {
+    transform:    translateY(-2px);
+    border-color: var(--primary);
+  }
+
+  &.locked { opacity: 0.6; }
+
+  .item-brand {
+    font-size:   11px;
+    color:       var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .item-name {
+    font-size:   16px;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  .item-desc {
+    font-size:   13px;
+    color:       var(--text-muted);
+    flex:        1;
+    line-height: 1.5;
+  }
+
+  .item-footer {
+    display:         flex;
+    justify-content: space-between;
+    align-items:     center;
+    margin-top:      12px;
+    padding-top:     16px;
+    border-top:      1px solid var(--border);
+  }
+
+  .item-cost {
+    display:     flex;
+    align-items: baseline;
+    gap:         4px;
+
+    .cost-value {
+      font-family: var(--font-display);
+      font-size:   20px;
+      font-weight: 700;
+      color:       var(--accent);
+    }
+
+    .cost-label {
+      font-size: 11px;
+      color:     var(--text-muted);
+    }
+  }
+}
+
+// ── History ───────────────────────────────────────────────
+.history-card { padding: 0; overflow: hidden; }
+
+.history-empty {
+  padding:    40px;
+  text-align: center;
+  color:      var(--text-muted);
+  font-size:  14px;
+}
+
+.history-row {
+  display:     flex;
+  align-items: center;
+  gap:         16px;
+  padding:     16px 24px;
+  border-bottom: 1px solid var(--border);
+
+  &:last-child { border-bottom: none; }
+}
+
+.history-icon {
+  width:           36px;
+  height:          36px;
+  border-radius:   50%;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  font-size:       16px;
+  font-weight:     700;
+  flex-shrink:     0;
+
+  &.earned   { background: rgba(0,212,170,0.15); color: var(--accent); }
+  &.redeemed { background: rgba(108,99,255,0.15); color: var(--primary); }
+}
+
+.history-info {
+  flex:           1;
+  display:        flex;
+  flex-direction: column;
+  gap:            3px;
+
+  .history-desc { font-size: 13px; font-weight: 500; }
+  .history-date { font-size: 11px; color: var(--text-muted); }
+}
+
+.history-points {
+  font-family: var(--font-display);
+  font-size:   15px;
+  font-weight: 600;
+
+  &.earned   { color: var(--accent); }
+  &.redeemed { color: var(--primary); }
+}
