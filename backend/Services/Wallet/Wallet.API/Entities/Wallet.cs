@@ -1,7 +1,6 @@
 using Wallet.API.Enums;
 
 namespace Wallet.API.Entities;
-
 public class Wallet
 {
     public Guid         Id             { get; set; } = Guid.NewGuid();

@@ -1,8 +1,7 @@
 using Auth.API.Enums;
 
 namespace Auth.API.Entities;
-
-public class User
+public class User //User table
 {
     public Guid     Id            { get; set; } = Guid.NewGuid();
     public string   Email         { get; set; } = string.Empty;

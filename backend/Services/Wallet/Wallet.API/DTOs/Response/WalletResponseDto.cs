@@ -1,5 +1,4 @@
 namespace Wallet.API.DTOs.Response;
-
 public class WalletResponseDto
 {
     public Guid     Id               { get; set; }
@@ -11,6 +10,5 @@ public class WalletResponseDto
     public string   Currency         { get; set; } = string.Empty;
     public string   Status           { get; set; } = string.Empty;
     public DateTime CreatedAt        { get; set; }
-
     public List<PaymentMethodResponseDto> PaymentMethods { get; set; } = new();
 }

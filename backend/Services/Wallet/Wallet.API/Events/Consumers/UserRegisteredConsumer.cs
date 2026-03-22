@@ -5,6 +5,7 @@ using RabbitMQ.Client.Events;
 using Wallet.API.Services.Interfaces;
 using WalletPlatform.Shared.Constants;
 using WalletPlatform.Shared.Events;
+//A regular class only exists when something calls it. A BackgroundService starts when the application starts and runs indefinitely in a background thread until the application shuts down
 
 namespace Wallet.API.Events.Consumers;
 

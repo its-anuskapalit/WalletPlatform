@@ -1,5 +1,5 @@
 namespace Auth.API.DTOs.Response;
-
+//sended from server to frontend
 public class AuthResponseDto
 {
     public string AccessToken  { get; set; } = string.Empty;

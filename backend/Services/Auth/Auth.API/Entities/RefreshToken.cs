@@ -1,5 +1,5 @@
 namespace Auth.API.Entities;
-
+//JWT access tokens expire in 60 minutes for security
 public class RefreshToken
 {
     public Guid     Id          { get; set; } = Guid.NewGuid();
@@ -11,9 +11,8 @@ public class RefreshToken
     public string?  CreatedByIp { get; set; }
     public DateTime CreatedAt   { get; set; } = DateTime.UtcNow;
 
-    public bool IsExpired  => DateTime.UtcNow >= ExpiresAt;
-    public bool IsActive   => !IsRevoked && !IsExpired;
-
+    public bool IsExpired  => DateTime.UtcNow >= ExpiresAt; //not for database
+    public bool IsActive   => !IsRevoked && !IsExpired; //not for database
     // Navigation
     public User User { get; set; } = null!;
 }

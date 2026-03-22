@@ -1,5 +1,5 @@
 namespace Auth.API.DTOs.Request;
-
+// these fields exist on the User entity but the client never sets them
 public class RegisterRequestDto
 {
     public string FirstName   { get; set; } = string.Empty;

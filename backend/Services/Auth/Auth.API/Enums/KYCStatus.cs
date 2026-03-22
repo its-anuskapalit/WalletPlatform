@@ -1,5 +1,4 @@
 namespace Auth.API.Enums;
-
 public enum KYCStatus
 {
     Pending   = 0,

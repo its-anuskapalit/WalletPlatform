@@ -8,7 +8,6 @@ public class PaymentMethod
     public Guid              WalletId      { get; set; }
     public PaymentMethodType Type          { get; set; }
     public string            DisplayName   { get; set; } = string.Empty;
-
     // Tokenized — never store raw card numbers
     public string            Token         { get; set; } = string.Empty;
     public string?           Last4Digits   { get; set; }

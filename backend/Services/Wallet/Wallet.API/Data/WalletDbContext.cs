@@ -2,11 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using Wallet.API.Entities;
 
 namespace Wallet.API.Data;
-
 public class WalletDbContext : DbContext
 {
     public WalletDbContext(DbContextOptions<WalletDbContext> options) : base(options) { }
-
     public DbSet<Wallet.API.Entities.Wallet> Wallets       => Set<Wallet.API.Entities.Wallet>();
     public DbSet<PaymentMethod>              PaymentMethods => Set<PaymentMethod>();
     public DbSet<WalletFreezeLog>            FreezeLogs     => Set<WalletFreezeLog>();

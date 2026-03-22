@@ -1,5 +1,4 @@
 namespace Wallet.API.DTOs.Request;
-
 public class WithdrawRequestDto
 {
     public decimal Amount          { get; set; }

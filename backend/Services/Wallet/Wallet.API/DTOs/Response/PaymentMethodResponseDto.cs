@@ -1,5 +1,4 @@
 namespace Wallet.API.DTOs.Response;
-
 public class PaymentMethodResponseDto
 {
     public Guid   Id          { get; set; }

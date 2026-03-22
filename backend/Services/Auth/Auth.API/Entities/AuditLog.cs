@@ -1,5 +1,5 @@
 namespace Auth.API.Entities;
-
+//userId? :Audit logs can be created for failed login attempts where the user is not yet identified.
 public class AuditLog
 {
     public Guid     Id         { get; set; } = Guid.NewGuid();

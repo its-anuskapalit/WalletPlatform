@@ -1,5 +1,4 @@
 namespace Wallet.API.Enums;
-
 public enum PaymentMethodType
 {
     BankAccount  = 0,

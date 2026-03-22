@@ -1,6 +1,6 @@
 namespace Auth.API.Entities;
-
-public class UserProfile
+//Single Responsibility Principle 
+public class UserProfile 
 {
     public Guid    Id          { get; set; } = Guid.NewGuid();
     public Guid    UserId      { get; set; }

@@ -1,31 +1,34 @@
 <Solution>
-  <Folder Name="/src/" />
-  <Folder Name="/src/Gateway/">
-    <Project Path="src/Gateway/ApiGateway/ApiGateway.csproj" />
+  <Folder Name="/backend/" />
+  <Folder Name="/backend/Gateway/">
+    <Project Path="backend/Gateway/ApiGateway/ApiGateway.csproj" />
   </Folder>
-  <Folder Name="/src/Services/" />
-  <Folder Name="/src/Services/Auth/">
-    <Project Path="src/Services/Auth/Auth.API/Auth.API.csproj" />
+  <Folder Name="/backend/Services/" />
+  <Folder Name="/backend/Services/Auth/">
+    <Project Path="backend/Services/Auth/Auth.API/Auth.API.csproj" />
   </Folder>
-  <Folder Name="/src/Services/Catalog/">
-    <Project Path="src/Services/Catalog/Catalog.API/Catalog.API.csproj" />
+  <Folder Name="/backend/Services/Catalog/">
+    <Project Path="backend/Services/Catalog/Catalog.API/Catalog.API.csproj" />
   </Folder>
-  <Folder Name="/src/Services/Notification/">
-    <Project Path="src/Services/Notification/Notification.API/Notification.API.csproj" />
+  <Folder Name="/backend/Services/Notification/">
+    <Project Path="backend/Services/Notification/Notification.API/Notification.API.csproj" />
   </Folder>
-  <Folder Name="/src/Services/Reporting/">
-    <Project Path="src/Services/Reporting/Reporting.API/Reporting.API.csproj" />
+  <Folder Name="/backend/Services/Reporting/">
+    <Project Path="backend/Services/Reporting/Reporting.API/Reporting.API.csproj" />
   </Folder>
-  <Folder Name="/src/Services/Rewards/">
-    <Project Path="src/Services/Rewards/Rewards.API/Rewards.API.csproj" />
+  <Folder Name="/backend/Services/Rewards/">
+    <Project Path="backend/Services/Rewards/Rewards.API/Rewards.API.csproj" />
   </Folder>
-  <Folder Name="/src/Services/Transaction/">
-    <Project Path="src/Services/Transaction/Transaction.API/Transaction.API.csproj" />
+  <Folder Name="/backend/Services/Transaction/">
+    <Project Path="backend/Services/Transaction/Transaction.API/Transaction.API.csproj" />
   </Folder>
-  <Folder Name="/src/Services/Wallet/">
-    <Project Path="src/Services/Wallet/Wallet.API/Wallet.API.csproj" />
+  <Folder Name="/backend/Services/Wallet/">
+    <Project Path="backend/Services/Wallet/Wallet.API/Wallet.API.csproj" />
   </Folder>
-  <Folder Name="/src/Shared/">
-    <Project Path="src/Shared/WalletPlatform.Shared/WalletPlatform.Shared.csproj" />
+  <Folder Name="/backend/Shared/">
+    <Project Path="backend/Shared/WalletPlatform.Shared/WalletPlatform.Shared.csproj" />
   </Folder>
 </Solution>
+
+
+

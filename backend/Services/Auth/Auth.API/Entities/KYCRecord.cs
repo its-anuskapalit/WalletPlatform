@@ -1,5 +1,5 @@
 using Auth.API.Enums;
-
+//KYC record is first created it has not been reviewed by anyone yet Guid? resprests this
 namespace Auth.API.Entities;
 
 public class KYCRecord

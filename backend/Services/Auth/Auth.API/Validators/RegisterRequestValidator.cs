@@ -1,6 +1,6 @@
 using Auth.API.DTOs.Request;
 using FluentValidation;
-
+//Data Annotations put validation rules on the DTO class itself thats why fluent validations
 namespace Auth.API.Validators;
 
 public class RegisterRequestValidator : AbstractValidator<RegisterRequestDto>

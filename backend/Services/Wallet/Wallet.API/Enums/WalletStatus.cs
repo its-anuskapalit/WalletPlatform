@@ -1,5 +1,4 @@
 namespace Wallet.API.Enums;
-
 public enum WalletStatus
 {
     Pending  = 0,   // Created but KYC not done yet

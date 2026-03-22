@@ -7,11 +7,11 @@ public class AuthDbContext : DbContext
 {
     public AuthDbContext(DbContextOptions<AuthDbContext> options) : base(options) { }
 
-    public DbSet<User>         Users         => Set<User>();
-    public DbSet<UserProfile>  UserProfiles  => Set<UserProfile>();
-    public DbSet<KYCRecord>    KYCRecords    => Set<KYCRecord>();
+    public DbSet<User> Users => Set<User>();
+    public DbSet<UserProfile> UserProfiles => Set<UserProfile>();
+    public DbSet<KYCRecord> KYCRecords => Set<KYCRecord>();
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
-    public DbSet<AuditLog>     AuditLogs     => Set<AuditLog>();
+    public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -28,6 +28,7 @@ public class AuthDbContext : DbContext
             e.Property(u => u.PhoneNumber).HasMaxLength(20).IsRequired();
             e.Property(u => u.Role).HasConversion<string>();
 
+            //Cascade means: when a User is deleted, automatically delete their Profile and KYCRecord.
             e.HasOne(u => u.Profile)
              .WithOne(p => p.User)
              .HasForeignKey<UserProfile>(p => p.UserId)
