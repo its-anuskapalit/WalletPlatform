@@ -1,5 +1,7 @@
-namespace WalletPlatform.Shared.Events;
+//double, float: binary where 0.1+0.2=0.30004 in temp coor its fine by in money nope thus decimal
+//IdempotencyKey : Transaction service uses this key to detect duplicate processin
 
+namespace WalletPlatform.Shared.Events;
 public class PaymentInitiatedEvent
 {
     public Guid TransactionId  { get; set; }

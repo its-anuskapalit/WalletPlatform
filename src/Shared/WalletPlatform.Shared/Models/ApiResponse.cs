@@ -1,5 +1,6 @@
+//diff services gives diff returns thats confusion for frontent
+//with this every response from every service looks the same
 namespace WalletPlatform.Shared.Models;
-
 public class ApiResponse<T>
 {
     public bool Success    { get; set; }
