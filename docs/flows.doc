@@ -1,0 +1,319 @@
+Flow 1 — User Registration
+START
+  │
+  ▼
+User fills form (firstName, lastName, email, phone, password)
+  │
+  ▼
+FluentValidation checks all fields
+  ├── FAIL → Return 400 with all error messages
+  │
+  ▼
+Check if email already exists in DB
+  ├── EXISTS → Return 400 "Email already registered"
+  │
+  ▼
+Check if phone already exists in DB
+  ├── EXISTS → Return 400 "Phone already registered"
+  │
+  ▼
+BCrypt hash the password (cost factor 11)
+  │
+  ▼
+Create User entity + UserProfile entity
+  │
+  ▼
+Save both to auth_db (single transaction)
+  │
+  ▼
+Publish UserRegisteredEvent to RabbitMQ
+  │
+  ▼
+Return 200 OK with accessToken + refreshToken + user profile
+  │
+  ├──► [ASYNC] Wallet.API creates wallet (status = Pending)
+  ├──► [ASYNC] Rewards.API creates loyalty account (Bronze tier)
+  └──► [ASYNC] Notification.API sends welcome email
+
+END
+
+Flow 2 — Login
+START
+  │
+  ▼
+User submits email + password
+  │
+  ▼
+Find user by email in auth_db
+  ├── NOT FOUND → Write AuditLog (failed) → Return 401
+  │
+  ▼
+Check IsActive = true
+  ├── FALSE → Write AuditLog (failed) → Return 401
+  │
+  ▼
+BCrypt.Verify(inputPassword, storedHash)
+  ├── MISMATCH → Write AuditLog (failed) → Return 401
+  │
+  ▼
+Generate JWT accessToken (60 min, HMAC-SHA256)
+  │
+  ▼
+Generate RefreshToken (128-bit random, 7 days)
+  │
+  ▼
+Save RefreshToken to auth_db
+  │
+  ▼
+Write AuditLog (success)
+  │
+  ▼
+Return 200 OK with accessToken + refreshToken + user profile
+
+END
+
+Flow 3 — KYC Approval
+START
+  │
+  ▼
+User submits KYC (documentType, documentNumber, documentUrl)
+  │
+  ▼
+Create KYCRecord (status = Submitted) in auth_db
+  │
+  ▼
+Return 200 OK — awaiting admin review
+  │
+  ▼
+Admin calls GET /api/kyc/pending
+  │
+  ▼
+Admin reviews and calls POST /api/kyc/{id}/approve
+  │
+  ▼
+Update KYCRecord status = Approved
+Set ReviewedBy = adminId
+Set ReviewedAt = now
+  │
+  ▼
+Publish KYCApprovedEvent to RabbitMQ
+  │
+  ▼
+Return 200 OK to admin
+  │
+  ├──► [ASYNC] Wallet.API sets wallet status = Active
+  └──► [ASYNC] Notification.API sends KYC approval email
+
+--- REJECTION PATH ---
+
+Admin calls POST /api/kyc/{id}/reject (with reason)
+  │
+  ▼
+Update KYCRecord status = Rejected
+Set RejectionReason = reason
+  │
+  ▼
+Return 200 OK
+  │
+  └──► [ASYNC] Notification.API sends rejection email
+
+END
+
+Flow 4 — Fund Wallet
+START
+  │
+  ▼
+User calls POST /api/wallet/fund (amount, description)
+  │
+  ▼
+Gateway validates JWT → routes to Wallet.API
+  │
+  ▼
+Get wallet by userId from wallet_db
+  ├── NOT FOUND → Return 404
+  │
+  ▼
+Check wallet status
+  ├── Pending → Return 400 "Complete KYC first"
+  ├── Frozen  → Return 400 "Wallet is frozen"
+  ├── Closed  → Return 400 "Wallet is closed"
+  │
+  ▼
+wallet.Balance += amount
+  │
+  ▼
+Save updated wallet to wallet_db
+  │
+  ▼
+Publish WalletFundedEvent to RabbitMQ
+  │
+  ▼
+Return 200 OK with updated wallet balance
+  │
+  └──► [ASYNC] Notification.API sends fund confirmation
+
+END
+
+Flow 5 — Payment (Send Money)
+START
+  │
+  ▼
+User calls POST /api/transactions/pay
+Header: Idempotency-Key: {unique-key}
+Body: { recipientId, amount, description }
+  │
+  ▼
+Gateway validates JWT → routes to Transaction.API
+  │
+  ▼
+Look up idempotency key in DB (by key + senderId)
+  ├── FOUND → Return cached transaction response (no processing)
+  │
+  ▼
+Validate input
+  ├── amount <= 0   → Return 400
+  ├── sender == recipient → Return 400
+  │
+  ▼
+Create Transaction record (status = Pending)
+  │
+  ▼
+Save IdempotencyRecord to DB  ← MUST happen before ledger write
+  │
+  ▼
+Update Transaction status = Processing
+  │
+  ▼
+Calculate sender balance from ledger
+(SUM of credits - SUM of debits for senderId)
+  │
+  ▼
+Check sender balance >= amount
+  ├── INSUFFICIENT → Jump to FAILURE PATH
+  │
+  ▼
+Write two ledger entries atomically:
+  Entry 1: DEBIT  senderId    amount  (balanceBefore / balanceAfter)
+  Entry 2: CREDIT recipientId amount  (balanceBefore / balanceAfter)
+  │
+  ▼
+Update Transaction status = Completed
+  │
+  ▼
+Publish TransactionCompletedEvent to RabbitMQ
+  │
+  ▼
+Return 200 OK with transaction + ledger entries
+  │
+  ├──► [ASYNC] Rewards.API awards points to sender
+  └──► [ASYNC] Notification.API sends payment confirmation
+
+--- FAILURE PATH (Saga Compensation) ---
+
+Any error after balance check
+  │
+  ▼
+Update Transaction status = Failed (with reason)
+  │
+  ▼
+Publish TransactionFailedEvent to RabbitMQ
+  │
+  ▼
+Return 500/400 error to client
+  │
+  └──► [ASYNC] Wallet.API credits amount back to sender
+       [ASYNC] Notification.API sends failure notification
+
+END
+
+Flow 6 — Points Redemption
+START
+  │
+  ▼
+User calls POST /api/redemption (catalogItemId)
+  │
+  ▼
+Gateway validates JWT → routes to Catalog.API
+  │
+  ▼
+Get catalog item by id
+  ├── NOT FOUND → Return 404
+  ├── IsActive = false → Return 400 "Item not available"
+  ├── StockCount = 0 → Return 400 "Out of stock"
+  │
+  ▼
+Create Redemption record (status = Pending)
+  │
+  ▼
+Decrement StockCount by 1 (if not unlimited / -1)
+  │
+  ▼
+Save to catalog_db
+  │
+  ▼
+Publish RedemptionRequestedEvent to RabbitMQ
+  │
+  ▼
+Return 200 OK with redemption details
+  │
+  ▼
+[ASYNC] Rewards.API receives RedemptionRequestedEvent
+  │
+  ▼
+Check user loyalty account points >= pointsCost
+  ├── INSUFFICIENT → Publish failure back to Catalog
+  │                  Catalog restores StockCount + 1
+  │                  Redemption status = Failed
+  │
+  ▼
+Deduct pointsCost from TotalPoints
+Write PointTransaction (type = Redeemed, negative points)
+  │
+  ▼
+Generate VoucherCode (format: XXXX-XXXX-XXXX)
+Update Redemption status = Completed
+  │
+  └──► [ASYNC] Notification.API sends redemption confirmation
+       with voucher code
+
+END
+
+Flow 7 — Token Refresh
+START
+  │
+  ▼
+Client sends POST /api/auth/refresh-token
+Body: { refreshToken: "..." }
+  │
+  ▼
+Find RefreshToken record in auth_db
+  ├── NOT FOUND → Return 401
+  │
+  ▼
+Check token.IsExpired (DateTime.UtcNow >= ExpiresAt)
+  ├── EXPIRED → Return 401
+  │
+  ▼
+Check token.IsRevoked
+  ├── REVOKED → Possible token theft — revoke ALL user tokens
+  │             Return 401
+  │
+  ▼
+Get user from token.UserId
+  ├── IsActive = false → Return 401
+  │
+  ▼
+Generate new accessToken (fresh 60 min)
+Generate new refreshToken (fresh 7 days)
+  │
+  ▼
+Mark old refreshToken as Revoked
+Set old token.ReplacedBy = new token value
+  │
+  ▼
+Save new refreshToken to auth_db
+  │
+  ▼
+Return 200 OK with new accessToken + new refreshToken
+
+END
