@@ -28,6 +28,11 @@
   <Folder Name="/backend/Shared/">
     <Project Path="backend/Shared/WalletPlatform.Shared/WalletPlatform.Shared.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Auth.API.Tests/Auth.API.Tests.csproj" />
+    <Project Path="tests/Transaction.API.Tests/Transaction.API.Tests.csproj" />
+    <Project Path="tests/Wallet.API.Tests/Wallet.API.Tests.csproj" />
+  </Folder>
 </Solution>
 
 
