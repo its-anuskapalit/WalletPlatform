@@ -30,8 +30,7 @@ public class CatalogController : ControllerBase
     /// <param name="category">Category filter (string → enum conversion)</param>
     /// <returns>List of catalog items</returns>
     [HttpGet]
-    public async Task<IActionResult> GetAll(
-        [FromQuery] string? category = null)
+    public async Task<IActionResult> GetAll([FromQuery] string? category = null)
     {
         // Convert string category to enum safely (case-insensitive)
         CatalogItemCategory? cat = null;
